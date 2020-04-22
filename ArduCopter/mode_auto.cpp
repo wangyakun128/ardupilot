@@ -20,7 +20,6 @@
  */
 
 // auto_init - initialise auto controller
-
 bool Copter::ModeAuto::init(bool ignore_checks)
 {
     if ((copter.position_ok() && copter.mission.num_commands() > 1) || ignore_checks) {
