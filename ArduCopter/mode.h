@@ -861,6 +861,11 @@ private:
     Vector3f path[10];
     int pathNum;
 
+    RouteMode mode;   // controls which auto controller is run
+
+    void go_run();
+    void rtl_start();
+    void rtl_run();
     void creat_path();
     void pos_control_start();
     void pos_control_run();

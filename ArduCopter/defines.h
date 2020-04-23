@@ -210,6 +210,12 @@ enum AutoMode {
     Auto_NavPayloadPlace,
 };
 
+// Route modes
+enum RouteMode {
+    Route_RTL,
+    Route_ROUTE,
+};
+
 // Guided modes
 enum GuidedMode {
     Guided_TakeOff,

@@ -7,7 +7,10 @@
 // guided_init - initialise guided controller
 bool Copter::ModeRoute::init(bool ignore_checks)
 {
+
     if (copter.position_ok() || ignore_checks) {
+
+        mode = Route_ROUTE;
         // initialise yaw
         auto_yaw.set_mode_to_default(false);
 
@@ -55,17 +58,48 @@ void Copter::ModeRoute::pos_control_start()
     auto_yaw.set_mode_to_default(false);
 }
 
-// guided_run - runs the guided controller
-// should be called at 100hz or more
-void Copter::ModeRoute::run()
+void Copter::ModeRoute::go_run()
 {
-    if(pathNum<6){
+    if(pathNum<=6){
         if(wp_nav->reached_wp_destination()){
             pathNum++;
             wp_nav->set_wp_destination(path[pathNum],false);
         }
+    }else{
+        rtl_start();
     }
     pos_control_run();
+}
+
+// auto_rtl_start - initialises RTL in AUTO flight mode
+void Copter::ModeRoute::rtl_start()
+{
+    mode = Route_RTL;
+
+    // call regular rtl flight mode initialisation and ask it to ignore checks
+    copter.mode_rtl.init(true);
+}
+
+void Copter::ModeRoute::rtl_run()
+{
+    // call regular rtl flight mode run function
+    copter.mode_rtl.run(false);
+}
+
+// guided_run - runs the guided controller
+// should be called at 100hz or more
+void Copter::ModeRoute::run()
+{
+    switch (mode) {
+
+    case Route_ROUTE:
+        go_run();
+        break;
+
+    case Route_RTL:
+        rtl_run();
+        break;
+    }
  }
 
 // guided_pos_control_run - runs the guided position controller
